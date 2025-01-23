@@ -19,7 +19,7 @@ This project implements a fall detection system using the MPU6050 sensor, neural
 
 ## Introduction
 
-Human Activity Recognition (HAR) involves identifying and classifying human actions based on sensor data. This project uses the MPU6050 sensor, which integrates an accelerometer and a gyroscope, to collect motion data for fall detection. Neural networks are employed to process and classify the data with high precision.
+Fall Detection (FD) involves identifying and classifying if the person falled or not based on sensor data. This project uses the MPU6050 sensor, which integrates an accelerometer and a gyroscope, to collect motion data for fall detection. Neural networks are employed to process and classify the data with high precision.
 
 Applications include:
 - Elderly health monitoring
@@ -30,24 +30,6 @@ Applications include:
 ---
 
 ## System Design
-
-### Neural Network Model
-
-The neural network includes:
-- **Architecture**: A feedforward network with:
-  - 2 hidden layers
-  - 1 output layer
-- **Activation Functions**:
-  - ReLU for hidden layers
-  - Sigmoid for the output layer
-- **Optimization Algorithm**: Adam
-- **Training**:
-  - Learning Rate: 0.01
-  - Epochs: 50
-
-Key Features:
-- Input size: `(6, 1)` (representing accelerometer and gyroscope data on 3 axes)
-- Output: Binary classification (fall/no fall)
 
 ### Sensor Data Processing
 
@@ -69,21 +51,48 @@ Key Features:
 
 ---
 
+### Neural Network Model
+
+Here we use Keras API in the TensorFlow library to build the model for the training process to save time and maximize the proficiency.
+
+The neural network includes:
+- **Architecture**: A feedforward network with:
+  - 1 inpur layer
+  - 2 hidden layers
+  - 1 output layer
+- **Activation Functions**:
+  - ReLU for hidden layers
+  - Sigmoid for the output layer
+- **Optimization Algorithm**: Adam
+- **Training**:
+  - Learning Rate: 0.01
+  - Epochs: 50
+
+Key Features:
+- Input size: `(6, 1)` (representing accelerometer and gyroscope data on 3 axes)
+- Output: Binary classification (fall/no fall)
+
+---
+
 ## Implementation Details
 
 ### Hardware Components
 - **Microcontroller**: ESP32-S3
 - **Sensor**: MPU6050 (6-axis accelerometer and gyroscope)
 
-### Software Architecture
+### Software flow
 1. **Data Acquisition**:
    - Configure and read data from MPU6050
 2. **Data Preprocessing**:
-   - Normalize and clean sensor data
-3. **Neural Network Processing**:
-   - Forward pass through the network to classify activities
-4. **Alert System**:
-   - Trigger alerts for detected falls
+   - Normalize and clean sensor data, data augmentation to extend the dataset
+3. **Neural Network Processing with python**:
+   - Training the model
+4. **Extract the parameters**:
+   - After training, the parameters will be extracted to an xlsx file, after that it will be defined in C
+5. **Neural Network model in C**:
+   - From the optimal parameters, build a feedforward network with exact the same structure as the python model but in C
+6. **Alarm system**:
+   - Using a buzzer and Wifi to alarm
 
 ---
 
